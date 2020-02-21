@@ -34,6 +34,8 @@ Please get detail about HPA(Horizontal POD Autoscaler) from [kubernete offical d
 
 To enable it, you need install [metrics-server](https://github.com/kubernetes-sigs/metrics-server)
 
+_(Note: Please install via script [install-metric-server.sh](../tools/install-metric-server.sh) or refer below steps.)_
+
 ```
 git clone https://github.com/kubernetes-sigs/metrics-server
 kubectl apply -f metrics-server/deploy/kubernetes/
