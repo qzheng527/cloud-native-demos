@@ -82,12 +82,15 @@ tools/tools/gen-k8s-yaml.sh -f kubernetes/elastic-inference.yaml.template -r <yo
 ```
 2. Deploy the core services as:
 ```
-kubectl apply -f kubernetes/elastic-inference.yaml
+kubectl apply -f kubernetes/elastic-inference.yaml -n <your prefer namespace>
 ```
+_Note: `-n <your prefer namespace` is optional. `Default` namespace will be adopted without `-n`._
+
 3. Test by sample video file as:
 ```
-kubectl apply -f kubernetes/sample-infer/
+kubectl apply -f kubernetes/sample-infer/ -n <your prefer namespace>
 ```
+_Note: `-n <your prefer namespace` is optional. `Default` namespace will be adopted without `-n`._
 
 After the above steps, the kubernete cluster will expose two services via NodePort:
 * `<k8s cluster IP>:31003`
