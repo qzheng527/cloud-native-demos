@@ -137,7 +137,13 @@ class OpenVinoInferEngineTask(InferEngineTask):
     @staticmethod
     def _init_openvino_cpu_plugin():
         plugin = IEPlugin(device="CPU")
-        plugin.add_cpu_extension("/usr/lib64/libcpu_extension.so")
+
+        try:
+             plugin.add_cpu_extension("/usr/lib64/libcpu_extension.so")
+        except:
+            LOG.info("Skip adding the CPU extension")
+            LOG.info("If is fine since OpenVino 2020.1")
+
         return plugin
 
     def infer(self, frame):
