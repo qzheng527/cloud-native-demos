@@ -1,0 +1,63 @@
+######################################################################
+# Sample Frame producer from video file to demostrate people/body detection.
+# The video file is from https://github.com/intel-iot-devkit/sample-videos/blob/master/face-demographics-walking-and-pause.mp4
+######################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ei-sample-object-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ei-sample-object
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ei-sample-object
+    spec:
+      containers:
+      - name: ei-fss
+        image: your-own-registry/ei-file-stream-service
+        imagePullPolicy: Always
+        env:
+        - name: VIDEO_FILE
+          value: bottle-detection.mp4
+        - name: QUEUE_HOST
+          value: ei-redis-svc
+        - name: INFER_TYPE
+          value: object
+      initContainers:
+        - name: init-sample-object-app
+          image: busybox:1.31
+          command: ['sh', '-c', 'until nslookup ei-redis-svc; do echo waiting for ei-redis-svc; sleep 2; done;']
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ei-sample-object-int8-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ei-sample-object-int8
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ei-sample-object-int8
+    spec:
+      containers:
+      - name: ei-fss
+        image: your-own-registry/ei-file-stream-service
+        imagePullPolicy: Always
+        env:
+        - name: VIDEO_FILE
+          value: bottle-detection.mp4
+        - name: QUEUE_HOST
+          value: ei-redis-svc
+        - name: INFER_TYPE
+          value: object-int8
+      initContainers:
+        - name: init-sample-object-int8-app
+          image: busybox:1.31
+          command: ['sh', '-c', 'until nslookup ei-redis-svc; do echo waiting for ei-redis-svc; sleep 2; done;']

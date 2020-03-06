@@ -332,6 +332,119 @@ spec:
     app: ei-infer-car-fp32-app
 ---
 ############################################
+# Inference service for object recoginition
+# The inference model refers to https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_YOLO_From_Tensorflow.html
+############################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ei-infer-object-app
+  labels:
+    app: ei-infer-object-app
+spec:
+  selector:
+    matchLabels:
+      app: ei-infer-object-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ei-infer-object-app
+    spec:
+      containers:
+      - name: ei-infer-object-app
+        image: your-own-registry/ei-inference-service
+        imagePullPolicy: Always
+        env:
+        - name: INFER_MODEL_NAME
+          value: "frozen_darknet_yolov3_tiny_model"
+        - name: INPUT_QUEUE_HOST
+          value: ei-redis-svc
+        - name: OUTPUT_BROKER_HOST
+          value: ei-redis-svc
+        - name: INFER_TYPE
+          value: object
+        resources:
+          requests:
+            cpu: "700m"
+          limits:
+            cpu: "1000m"
+        ports:
+        - name: web
+          containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ei-infer-object-app
+  labels:
+    app: ei-infer-object-app
+spec:
+  ports:
+  - name: web
+    port: 8000
+    targetPort: 8000
+  selector:
+    app: ei-infer-object-app
+---
+############################################
+# Inference service for object recoginition
+# The inference model refers to https://docs.openvinotoolkit.org/latest/_docs_MO_DG_prepare_model_convert_model_tf_specific_Convert_YOLO_From_Tensorflow.html
+# and https://docs.openvinotoolkit.org/latest/_docs_Workbench_DG_Int_8_Quantization.html
+############################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ei-infer-object-int8-app
+  labels:
+    app: ei-infer-object-int8-app
+spec:
+  selector:
+    matchLabels:
+      app: ei-infer-object-int8-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ei-infer-object-int8-app
+    spec:
+      containers:
+      - name: ei-infer-object-int8-app
+        image: your-own-registry/ei-inference-service
+        imagePullPolicy: Always
+        env:
+        - name: INFER_MODEL_NAME
+          value: "frozen_darknet_yolov3_tiny_model_int8"
+        - name: INPUT_QUEUE_HOST
+          value: ei-redis-svc
+        - name: OUTPUT_BROKER_HOST
+          value: ei-redis-svc
+        - name: INFER_TYPE
+          value: object-int8
+        resources:
+          requests:
+            cpu: "700m"
+          limits:
+            cpu: "1000m"
+        ports:
+        - name: web
+          containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ei-infer-object-int8-app
+  labels:
+    app: ei-infer-object-int8-app
+spec:
+  ports:
+  - name: web
+    port: 8000
+    targetPort: 8000
+  selector:
+    app: ei-infer-object-int8-app
+---
+############################################
 # Websocket server
 ############################################
 apiVersion: apps/v1

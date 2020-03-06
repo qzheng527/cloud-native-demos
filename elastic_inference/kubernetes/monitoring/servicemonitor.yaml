@@ -67,3 +67,31 @@ spec:
   endpoints:
   - port: web
     interval: 15s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ei-infer-object-app
+  labels:
+    service-monitor: ei-infer-object-app
+spec:
+  selector:
+    matchLabels:
+      app: ei-infer-object-app
+  endpoints:
+  - port: web
+    interval: 15s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ei-infer-object-int8-app
+  labels:
+    service-monitor: ei-infer-object-int8-app
+spec:
+  selector:
+    matchLabels:
+      app: ei-infer-object-int8-app
+  endpoints:
+  - port: web
+    interval: 15s
