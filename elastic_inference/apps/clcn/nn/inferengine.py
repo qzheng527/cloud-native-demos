@@ -10,6 +10,7 @@ from openvino.inference_engine import IEPlugin
 from clcn.appbase import CLCNTask
 from clcn.stream import StreamInfo
 from clcn.nn.nn_yolo_tiny import NNYolov3Tiny
+from clcn.nn.nn_yolo import NNYolov3
 from clcn.nn.nn import NNGeneralDetection
 
 LOG = logging.getLogger(__name__)
@@ -162,6 +163,12 @@ class NNFactory:
         """
         Get NN detection class according to model name
         """
+        if model_name.lower() in [
+                "frozen_darknet_yolov3_model",
+                "frozen_darknet_yolov3_model_int8"
+                ]:
+            return NNYolov3(model_dir, model_name)
+
         if model_name.lower() in [
                 "frozen_darknet_yolov3_tiny_model",
                 "frozen_darknet_yolov3_tiny_model_int8"
